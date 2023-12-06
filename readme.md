@@ -1,2 +1,1 @@
 # Advent Of Code
-
