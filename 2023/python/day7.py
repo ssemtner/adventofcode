@@ -7,16 +7,6 @@ all_cards_2 = ["J", "2", "3", "4", "5", "6", "7", "8", "9", "T", "Q", "K", "A"]
 
 
 def score_hand(cards):
-    if all([True if card == cards[0] else False for card in cards]):
-        return 1
-
-    # check 4 of a kind
-    if (
-        sum([1 if card == cards[0] else 0 for card in cards]) == 4
-        or sum([1 if card == cards[1] else 0 for card in cards]) == 4
-    ):
-        return 2
-
     counts = {}
     for card in cards:
         if card in counts:
@@ -29,29 +19,31 @@ def score_hand(cards):
         if counts[card] == 2:
             pairs += 1
 
-    # full house
-    if pairs == 1 and len(counts) == 2:
-        return 3
+    if len(counts) == 1:
+        return 1  # 5 of a kind
 
-    if (
-        sum([1 if card == cards[0] else 0 for card in cards]) == 3
-        or sum([1 if card == cards[1] else 0 for card in cards]) == 3
-        or sum([1 if card == cards[2] else 0 for card in cards]) == 3
-    ):
-        return 4
+    # check 4 of a kind
+    if len(counts) == 2:
+        if pairs == 1:
+            return 3  # full house
+        else:
+            return 2  # four of a kind
+
+    if max(counts.values()) == 3:
+        return 4  # 3 of a kind
 
     if pairs == 2:
-        return 5
+        return 5  # 2 pairs
 
     if pairs == 1:
-        return 6
+        return 6  # 1 pair
 
-    return 7
+    return 7  # high card
 
 
 def compare_hands(hand1, hand2, part2=False):
-    score1 = score_hand_2(hand1) if part2 else score_hand(hand1)
-    score2 = score_hand_2(hand2) if part2 else score_hand(hand2)
+    score1 = score_hand_wilds(hand1) if part2 else score_hand(hand1)
+    score2 = score_hand_wilds(hand2) if part2 else score_hand(hand2)
 
     if score1 < score2:
         return 1
@@ -101,16 +93,19 @@ def possible_hands_wild(cards):
             return res
 
 
-def score_hand_2(cards):
-    min_score = 10  # not possible
+def score_hand_wilds(cards):
+    counts = {}
+    for card in cards:
+        if card in counts:
+            counts[card] += 1
+        else:
+            counts[card] = 1
 
-    if "J" in cards:
-        possible_hands = possible_hands_wild(cards)
-        # print(len(possible_hands))
-        for h in possible_hands:
-            min_score = min(min_score, score_hand(h))
-
-    return min(min_score, score_hand(cards))
+    counts.pop("J", None)
+    if len(counts) == 0:
+        return score_hand(cards)
+    most_common = max(counts.items(), key=lambda x: x[1])[0]
+    return score_hand([most_common if c == "J" else c for c in cards])
 
 
 def part2(path):
@@ -125,9 +120,6 @@ def part2(path):
     sorted_hands = sorted(
         hands, key=cmp_to_key(lambda x, y: compare_hands(x[0], y[0], True))
     )
-
-    # for hand in sorted_hands:
-    # print(hand, score_hand_2(hand[0]))
 
     score = 0
     for i, hand in enumerate(sorted_hands):
