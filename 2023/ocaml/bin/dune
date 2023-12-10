@@ -1,4 +1,6 @@
 (executables
  (public_names day01 day02 day03)
  (names day01 day02 day03)
- (libraries aoc))
+ (libraries aoc core_unix.command_unix)
+ (preprocess
+  (pps ppx_jane)))

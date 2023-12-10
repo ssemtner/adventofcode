@@ -59,14 +59,13 @@ let part_2 lines =
 ;;
 
 let () =
-  let test_lines = Aoc.read_lines "../data/sample/day2.txt" in
-  let lines = Aoc.read_lines "../data/day2.txt" in
-  let part_1_test = part_1 test_lines in
-  if part_1_test = 8
-  then Printf.printf "Test 1 passed\nPart 1: %d\n" (part_1 lines)
-  else Printf.printf "Test 1 failed\nExpected: %d, Got: %d\n" 8 part_1_test;
-  let part_2_test = part_2 test_lines in
-  if part_2_test = 2286
-  then Printf.printf "Test 2 passed\nPart 2: %d\n" (part_2 lines)
-  else Printf.printf "Test 2 failed\nExpected: %d, Got: %d\n" 2286 part_2_test
+  Aoc.command
+    part_1
+    part_2
+    ~path:"../data/day2.txt"
+    ~test_path:(Some "../data/sample/day2.txt")
+    ~test_1_target:(Some 8)
+    ~test_2_target:(Some 2286)
+    ()
+  |> Command_unix.run
 ;;

@@ -1,6 +1,7 @@
 open Core
 
-let prepare contents =
+let prepare lines =
+  let contents = String.concat lines ~sep:"\n" in
   let rec aux row col num nums symbols = function
     | [] -> nums, symbols
     | x :: xs ->
@@ -33,19 +34,20 @@ let prepare contents =
   aux 0 0 0 [] [] (String.to_list contents)
 ;;
 
-let adjacent (num_row, num_col, _num) (sym_row, sym_col, _symbol) =
-  let start_row = num_row - 1 in
-  let start_col = num_col - 1 in
-  let end_row = num_row + 4 in
-  let end_col = num_col + 1 in
-  sym_row >= start_row
-  && sym_row <= end_row
-  && sym_col >= start_col
-  && sym_col <= end_col
+let adjacent (num_row, num_col, num) (sym_row, sym_col, _symbol) =
+  let row_diff = abs (num_row - sym_row) in
+  let num_digits = Float.log10 (Float.of_int num) |> Float.to_int in
+  row_diff <= 1 && num_col - num_digits - 2 <= sym_col && sym_col <= num_col + 2
 ;;
 
-let part_1 contents =
-  let nums, symbols = prepare contents in
+let part_1 lines =
+  let nums, symbols = prepare lines in
+  List.map nums ~f:(fun (row, col, num) ->
+    Printf.sprintf "%d (%d, %d)" num row col)
+  |> Aoc.print_list;
+  List.map symbols ~f:(fun (row, col, symbol) ->
+    Printf.sprintf "%c (%d, %d)" symbol row col)
+  |> Aoc.print_list;
   let rec aux acc = function
     | [] -> acc
     | (row, col, num) :: xs ->
@@ -59,27 +61,14 @@ let part_1 contents =
   aux 0 nums
 ;;
 
-let _part_2 _lines = 0
+let part_2 _lines = 0
 
 let () =
-  let test_contents = Aoc.read_file "../data/sample/day3.txt" in
-  let part_1_test = part_1 test_contents in
-  Printf.printf "Test 1: %d\n" part_1_test;
-  (* let test_lines = Aoc.read_lines "../data/sample/day3.txt" in
-     let lines = Aoc.read_lines "../data/day3.txt" in
-
-     let part_1_test = part_1 test_lines in
-
-     if part_1_test = 4361 then
-     Printf.printf "Test 1 passed\nPart 1: %d\n" (part_1 lines)
-     else
-     Printf.printf "Test 1 failed\nExpected: %d, Got: %d\n" 4361 part_1_test;
-
-     let part_2_test = part_2 test_lines in
-
-     if part_2_test = 467835 then
-     Printf.printf "Test 2 passed\nPart 2: %d\n" (part_2 lines)
-     else
-     Printf.printf "Test 2 failed\nExpected: %d, Got: %d\n" 467835 part_2_test; *)
-  ()
+  Aoc.command
+    part_1
+    part_2
+    ~path:"../data/day3.txt"
+    ~test_path:(Some "../data/sample/day3.txt")
+    ()
+  |> Command_unix.run
 ;;
