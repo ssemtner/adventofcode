@@ -186,8 +186,6 @@ let part_2 lines =
       acc + Array.counti row ~f:(fun j c -> j % 3 = 1 && Char.equal c '.'))
 ;;
 
-(* print grid *)
-
 let () =
   Aoc.command
     part_1
