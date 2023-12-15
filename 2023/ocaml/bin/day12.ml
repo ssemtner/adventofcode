@@ -130,7 +130,7 @@ let () =
     part_2
     ~path:"../data/day12.txt"
     ~test_path:
-      (Some "/Users/sjsem/Developer/adventofcode/2023/data/sample/day12.txt")
+      (Some "../data/sample/day12.txt")
     ~test_1_target:(Some 21)
     ~test_2_target:(Some 525152)
     ()
