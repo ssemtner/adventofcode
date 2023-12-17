@@ -9,58 +9,7 @@ let parse_row line =
   springs, counts
 ;;
 
-let valid counts springs =
-  let rec aux acc springs counts =
-    match springs, counts with
-    | [], [] -> true
-    | _, [] -> List.for_all springs ~f:(Char.( <> ) '#')
-    | [], _ ->
-      (match acc = List.hd_exn counts && List.length counts = 1 with
-       | true -> true
-       | _ -> false)
-    | s :: springs, c :: ctail ->
-      (match s with
-       | '.' ->
-         (match acc = c with
-          | false when acc = 0 -> aux 0 springs counts
-          | true -> aux 0 springs ctail
-          | false -> false)
-       | '#' -> aux (acc + 1) springs counts
-       | _ -> failwithf "invalid spring %s" (Char.to_string s) ())
-  in
-  aux 0 springs counts
-;;
-
-let _contains_unknown str = List.exists str ~f:(fun x -> Char.equal x '?')
-
-let all_combinations springs =
-  let rec aux acc = function
-    | [] ->
-      (* Printf.printf "returning acc: %s\n" (String.of_char_list acc); *)
-      [ acc ]
-    | x :: xs ->
-      (* Printf.printf "acc: %s\n" (String.of_char_list acc); *)
-      (match x with
-       | '?' ->
-         let p1 = aux [] ('.' :: xs) in
-         let p2 = aux [] ('#' :: xs) in
-         p1 @ p2 |> List.map ~f:(fun a -> acc @ a)
-       | _ ->
-         (* Printf.printf "adding %s to acc\n" (Char.to_string x); *)
-         let acc' = acc @ [ x ] in
-         aux acc' xs)
-  in
-  aux [] springs
-;;
-
-let part_1 lines =
-  let rows = List.map lines ~f:parse_row in
-  List.fold rows ~init:0 ~f:(fun acc (springs, counts) ->
-    all_combinations springs
-    |> List.count ~f:(fun springs -> valid counts springs)
-    |> ( + ) acc)
-;;
-
+(* I didn't come up with this *)
 let unfold_row row =
   let rec repeat_springs n l =
     match n with
@@ -119,9 +68,14 @@ let ways (springs, counts) =
   ans
 ;;
 
+let part_1 lines =
+  let rows = List.map lines ~f:parse_row in
+  List.fold rows ~init:0 ~f:(fun acc row -> acc + ways row)
+;;
+
 let part_2 lines =
   let rows = List.map lines ~f:(fun row -> parse_row row |> unfold_row) in
-  List.map rows ~f:(fun row -> ways row) |> List.fold ~init:0 ~f:( + )
+  List.fold rows ~init:0 ~f:(fun acc row -> acc + ways row)
 ;;
 
 let () =
@@ -129,8 +83,7 @@ let () =
     part_1
     part_2
     ~path:"../data/day12.txt"
-    ~test_path:
-      (Some "../data/sample/day12.txt")
+    ~test_path:(Some "../data/sample/day12.txt")
     ~test_1_target:(Some 21)
     ~test_2_target:(Some 525152)
     ()
