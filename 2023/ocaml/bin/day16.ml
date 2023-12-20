@@ -181,7 +181,7 @@ let () =
     ~path:"../data/day16.txt"
     ~test_path:(Some "../data/sample/day16.txt")
     ~test_1_target:(Some 46)
-    ~test_2_target:None
+    ~test_2_target:(Some 51)
     ()
   |> Command_unix.run
 ;;
