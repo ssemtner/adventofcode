@@ -10,8 +10,23 @@
   day14
   day15
   day16
-  day17)
- (names day01 day02 day03 day04 day10 day12 day13 day14 day15 day16 day17)
+  day17
+  day18
+  day19)
+ (names
+  day01
+  day02
+  day03
+  day04
+  day10
+  day12
+  day13
+  day14
+  day15
+  day16
+  day17
+  day18
+  day19)
  (libraries aoc core_unix.command_unix)
  (preprocess
   (pps ppx_jane)))
