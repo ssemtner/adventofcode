@@ -111,9 +111,9 @@ let () =
     part_1
     part_2
     ~path:"../data/day3.txt"
-    ~test_path:(Some "../data/sample/day3.txt")
-    ~test_1_target:(Some 4361)
-    ~test_2_target:(Some 467835)
+    ~test_path:( "../data/sample/day3.txt")
+    ~test_1_target:( 4361)
+    ~test_2_target:( 467835)
     ()
   |> Command_unix.run
 ;;

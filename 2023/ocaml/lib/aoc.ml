@@ -1,5 +1,14 @@
 open Core
 
+module Point = struct
+  module T = struct
+    type t = int * int [@@deriving compare, hash, sexp]
+  end
+
+  include T
+  include Comparator.Make (T)
+end
+
 let read_lines file =
   Stdio.In_channel.with_file file ~f:(fun chan ->
     let x = In_channel.input_all chan in
@@ -18,10 +27,12 @@ let command
   part_1
   part_2
   ~path
-  ?(test_path = None)
-  ?(test_path_2 = None)
-  ?(test_1_target = None)
-  ?(test_2_target = None)
+  ?test_path
+  ?test_path_2
+  ?test_1_target
+  ?test_2_target
+  ?test_part_1
+  ?test_part_2
   ()
   =
   Command.basic
@@ -62,11 +73,19 @@ let command
                time
          | None -> Printf.printf "Part %d: %d (%f ms)\n" part result time
        in
+       let get_f part_f test_part_f =
+         match test with
+         | true ->
+           (match test_part_f with
+            | Some f -> f
+            | None -> part_f)
+         | false -> part_f
+       in
        let execute_part part =
          let f, lines', target =
            match part with
-           | 1 -> part_1, lines 1, test_1_target
-           | 2 -> part_2, lines 2, test_2_target
+           | 1 -> get_f part_1 test_part_1, lines 1, test_1_target
+           | 2 -> get_f part_2 test_part_2, lines 2, test_2_target
            | _ -> raise (Invalid_argument "Invalid part")
          in
          let target =

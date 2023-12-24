@@ -80,10 +80,10 @@ let () =
     part_1
     part_2
     ~path:"../data/day1.txt"
-    ~test_path:(Some "../data/sample/day1part1.txt")
-    ~test_path_2:(Some "../data/sample/day1part2.txt")
-    ~test_1_target:(Some 142)
-    ~test_2_target:(Some 281)
+    ~test_path:"../data/sample/day1part1.txt"
+    ~test_path_2:"../data/sample/day1part2.txt"
+    ~test_1_target:142
+    ~test_2_target:281
     ()
   |> Command_unix.run
 ;;

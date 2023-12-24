@@ -12,7 +12,9 @@
   day16
   day17
   day18
-  day19)
+  day19
+  day20
+  day21)
  (names
   day01
   day02
@@ -26,7 +28,9 @@
   day16
   day17
   day18
-  day19)
- (libraries aoc core_unix.command_unix)
+  day19
+  day20
+  day21)
+ (libraries aoc core_unix.command_unix ocamlgraph)
  (preprocess
   (pps ppx_jane)))

@@ -30,13 +30,6 @@ module Workflow = struct
       | 's' -> S
       | _ -> failwith "invalid key"
     ;;
-
-    let to_string = function
-      | X -> "X"
-      | M -> "M"
-      | A -> "A"
-      | S -> "S"
-    ;;
   end
 
   module Rule = struct
@@ -245,9 +238,9 @@ let () =
     part_1
     part_2
     ~path:"../data/day19.txt"
-    ~test_path:(Some "../data/sample/day19.txt")
-    ~test_1_target:(Some 19114)
-    ~test_2_target:(Some 167409079868000)
+    ~test_path:"../data/sample/day19.txt"
+    ~test_1_target:19114
+    ~test_2_target:167409079868000
     ()
   |> Command_unix.run
 ;;
