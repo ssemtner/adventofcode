@@ -1,3 +1,6 @@
 [submodule "2023/data"]
 	path = 2023/data
 	url = https://github.com/ssemtner/aoc2023inputs.git
+[submodule "2024/data"]
+	path = 2024/data
+	url = https://github.com/ssemtner/aoc2024inputs.git
