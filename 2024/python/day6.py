@@ -11,6 +11,7 @@ def part1(path):
 
     i, j = start(grid)
     count, _ = solve(i, j, grid)
+    assert count is not None
 
     return len(count)
 
@@ -24,27 +25,18 @@ def part2(path):
 
     # slight pruning by avoiding anything that could not touch the path
     s, _ = solve(i, j, grid)
-
-    def worth(x, y):
-        for dx in [0, 1, -1]:
-            for dy in [0, 1, -1]:
-                if (x + dx, y + dy) in s:
-                    return True
-        return False
+    assert s is not None
 
     count = 0
 
     # bad and brute force but I'll fix it once I rewrite everything in another language
-    for x in tqdm.tqdm(range(len(grid))):
-        for y in range(len(grid[i])):
-            if not worth(x, y):
-                continue
-            if grid[x][y] == ".":
-                grid[x][y] = "#"
-                _, loop = solve(i, j, grid)
-                if loop:
-                    count += 1
-                grid[x][y] = "."
+    for x, y in tqdm.tqdm(s):
+        if grid[x][y] == ".":
+            grid[x][y] = "#"
+            _, loop = solve(i, j, grid)
+            if loop:
+                count += 1
+            grid[x][y] = "."
     return count
 
 
@@ -55,7 +47,7 @@ def solve(i, j, grid):
     d = 0
 
     visited = set()
-    count = set()
+    count: set[tuple[int, int]] = set()
 
     while True:
         if (i, j, d) in visited:
@@ -77,6 +69,7 @@ def start(grid):
         for y in range(len(grid[0])):
             if grid[x][y] == "^":
                 return x, y
+    raise ValueError("No start")
 
 
 class TestDay1(unittest.TestCase):
