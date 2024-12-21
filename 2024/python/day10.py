@@ -52,7 +52,7 @@ if __name__ == "__main__":
 
     start = time.time()
     print(f"part 1: {solve('../data/day10.txt', False)} ({time.time() - start:.4f}s)")
-    #
+
     start = time.time()
     print(f"part 2: {solve('../data/day10.txt', True)} ({time.time() - start:.4f}s)")
 
