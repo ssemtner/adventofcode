@@ -1,5 +1,4 @@
-use std::collections::HashMap;
-
+use fxhash::FxHashMap;
 use itertools::Itertools;
 
 type Input = (Vec<u32>, Vec<u32>);
@@ -21,7 +20,7 @@ pub fn part1(input: &Input) -> u32 {
 }
 
 pub fn part2((a, b): &Input) -> u32 {
-    let mut counts = HashMap::new();
+    let mut counts = FxHashMap::with_capacity_and_hasher(b.len(), Default::default());
     for &x in b {
         counts.entry(x).and_modify(|e| *e += 1).or_insert(1);
     }
