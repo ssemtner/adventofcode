@@ -97,6 +97,7 @@ pub fn part2(input: &Input) -> u32 {
         &day_replace,
         None,
         Some(&format!("bench!(year{year});\n")),
+        Some(&format!(r"(bench!\(year{},.*?{}.*?)\)", year, day_str)),
     );
 
     update_macro(
@@ -113,6 +114,7 @@ pub fn part2(input: &Input) -> u32 {
         ),
         Some(&day_str),
         None,
+        None,
     );
 
     update_macro(
@@ -121,6 +123,7 @@ pub fn part2(input: &Input) -> u32 {
         &day_replace,
         None,
         Some(&format!("runner!(year{year});\n")),
+        Some(&format!(r"(runner!\(year{},.*?{}.*?)\)", year, day_str)),
     );
 
     update_macro(
@@ -129,6 +132,19 @@ pub fn part2(input: &Input) -> u32 {
         &day_replace,
         None,
         Some(&format!("lib!(year{year});\n")),
+        Some(&format!(r"(lib!\(year{},.*?{}.*?)\)", year, day_str)),
+    );
+
+    update_macro(
+        &main,
+        &format!(r"(all_puzzles!\(year\d{{4}}(?:,\s*year\d{{4}})*)\)"),
+        &format!(", year{year})"),
+        None,
+        None,
+        Some(&format!(
+            r"(all_puzzles!\(year{},.*?{}.*?)\)",
+            year, day_str
+        )),
     );
 
     let status = Command::new("cargo").arg("fmt").status().unwrap();
@@ -143,12 +159,20 @@ fn update_macro(
     new_arg: &str,
     alt_check: Option<&str>,
     new_template: Option<&str>,
+    must_not_match: Option<&str>,
 ) {
     let mut text = read_to_string(file).unwrap();
     let re = Regex::new(regex).unwrap();
 
     if !re.is_match(&text) && new_template.is_some() {
         text.push_str(new_template.unwrap());
+    }
+
+    if must_not_match.is_some()
+        && re.is_match(&text)
+        && Regex::new(must_not_match.unwrap()).unwrap().is_match(&text)
+    {
+        return;
     }
 
     let updated = re.replace_all(&text, |caps: &regex::Captures| {
@@ -174,7 +198,6 @@ macro_rules! all_puzzles {
 }
 
 fn run_puzzles(year: Option<&u32>, day: Option<&u32>) {
-    // TODO: get this part in scaffold
     let puzzles: Vec<_> = all_puzzles!(year2024, year2025)
         .filter(|puzzle: &Puzzle| {
             year.is_none_or(|year| {
