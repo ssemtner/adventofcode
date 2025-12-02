@@ -2,7 +2,7 @@ use regex::Regex;
 
 type Input<'a> = Vec<regex::Captures<'a>>;
 
-pub fn parse(input: &str) -> Input {
+pub fn parse(input: &str) -> Input<'_> {
     let re = Regex::new(r"mul\(([0-9]+),([0-9]+)\)|(do)\(\)|(don't)\(\)").unwrap();
     re.captures_iter(input).collect::<Vec<_>>()
 }

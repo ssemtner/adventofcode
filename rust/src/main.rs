@@ -82,11 +82,21 @@ pub fn part2(input: &Input) -> u32 {
     let day_str = format!("day{:02}", day);
     let day_replace = format!(", {})", day_str);
 
+    // create test file if needed
+    if !test.exists() {
+        std::fs::write(
+            &test,
+            format!("#[macro_use]\nmod test;\n\nmod year{year} {{}}"),
+        )
+        .unwrap()
+    }
+
     update_macro(
         &bench,
-        &format!(r"(bench!\(year{},[\s\S]*?)\)", year),
+        &format!(r"(bench!\(year{},?[\s\S]*?)\)", year),
         &day_replace,
         None,
+        Some(&format!("bench!(year{year});\n")),
     );
 
     update_macro(
@@ -102,20 +112,23 @@ pub fn part2(input: &Input) -> u32 {
             year, day_str,
         ),
         Some(&day_str),
+        None,
     );
 
     update_macro(
         &main,
-        &format!(r"(runner!\(year{},[\s\S]*?)\)", year),
+        &format!(r"(runner!\(year{},?[\s\S]*?)\)", year),
         &day_replace,
         None,
+        Some(&format!("runner!(year{year});\n")),
     );
 
     update_macro(
         &lib,
-        &format!(r"(lib!\(year{},[\s\S]*?)\)", year),
+        &format!(r"(lib!\(year{},?[\s\S]*?)\)", year),
         &day_replace,
         None,
+        Some(&format!("lib!(year{year});\n")),
     );
 
     let status = Command::new("cargo").arg("fmt").status().unwrap();
@@ -124,9 +137,20 @@ pub fn part2(input: &Input) -> u32 {
     }
 }
 
-fn update_macro(file: &PathBuf, regex: &str, new_arg: &str, alt_check: Option<&str>) {
-    let text = read_to_string(file).unwrap();
+fn update_macro(
+    file: &PathBuf,
+    regex: &str,
+    new_arg: &str,
+    alt_check: Option<&str>,
+    new_template: Option<&str>,
+) {
+    let mut text = read_to_string(file).unwrap();
     let re = Regex::new(regex).unwrap();
+
+    if !re.is_match(&text) && new_template.is_some() {
+        text.push_str(new_template.unwrap());
+    }
+
     let updated = re.replace_all(&text, |caps: &regex::Captures| {
         let matched = &caps[0];
         if matched.contains(new_arg)
@@ -142,10 +166,17 @@ fn update_macro(file: &PathBuf, regex: &str, new_arg: &str, alt_check: Option<&s
     fs::write(file, updated.to_string()).unwrap();
 }
 
+macro_rules! all_puzzles {
+    ($($year:ident),*) => {
+        empty()
+            $(.chain($year()))*
+    }
+}
+
 fn run_puzzles(year: Option<&u32>, day: Option<&u32>) {
-    let puzzles: Vec<_> = empty()
-        .chain(year2024())
-        .filter(|puzzle| {
+    // TODO: get this part in scaffold
+    let puzzles: Vec<_> = all_puzzles!(year2024, year2025)
+        .filter(|puzzle: &Puzzle| {
             year.is_none_or(|year| {
                 (*year == puzzle.year || *year + 2000 == puzzle.year)
                     && day.is_none_or(|day| *day == puzzle.day)
@@ -232,3 +263,4 @@ macro_rules! runner {
 }
 
 runner!(year2024, day01, day02, day03, day04, day05, day06, day07, day08);
+runner!(year2025, day01, day02);

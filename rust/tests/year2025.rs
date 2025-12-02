@@ -1,0 +1,14 @@
+#[macro_use]
+mod test;
+
+mod year2025 {
+    test_day!(year2025, day01,
+        (sample_day1, part1: 3, part2: 6),
+        (day1, part1: 1154, part2: 6819)
+    );
+
+    test_day!(year2025, day02,
+        (sample_day2, part1: 1227775554, part2: 4174379265),
+        (day2, part1: 24747430309, part2: 30962646823)
+    );
+}
