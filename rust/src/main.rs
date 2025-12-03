@@ -93,11 +93,17 @@ pub fn part2(input: &Input) -> u32 {
 
     update_macro(
         &bench,
-        &format!(r"(bench!\(year{},?[\s\S]*?)\)", year),
+        &format!(
+            r"(bench!\([ \t]*\n?[ \t]*year{},?[\s\S]*?)[ \t]*\n?[ \t]*\)",
+            year
+        ),
         &day_replace,
         None,
         Some(&format!("bench!(year{year});\n")),
-        Some(&format!(r"(bench!\(year{},.*?{}.*?)\)", year, day_str)),
+        Some(&format!(
+            r"(bench!\([ \t]*\n?[ \t]*year{},[^)]*?{}[^)]*?)[ \t]*\n?[ \t]*\)",
+            year, day_str
+        )),
     );
 
     update_macro(
@@ -119,20 +125,32 @@ pub fn part2(input: &Input) -> u32 {
 
     update_macro(
         &main,
-        &format!(r"(runner!\(year{},?[\s\S]*?)\)", year),
+        &format!(
+            r"(runner!\([ \t]*\n?[ \t]*year{},?[\s\S]*?)[ \t]*\n?[ \t]*\)",
+            year
+        ),
         &day_replace,
         None,
         Some(&format!("runner!(year{year});\n")),
-        Some(&format!(r"(runner!\(year{},.*?{}.*?)\)", year, day_str)),
+        Some(&format!(
+            r"(runner!\([ \t]*\n?[ \t]*year{},[^)]*?{}[^)]*?)[ \t]*\n?[ \t]*\)",
+            year, day_str
+        )),
     );
 
     update_macro(
         &lib,
-        &format!(r"(lib!\(year{},?[\s\S]*?)\)", year),
+        &format!(
+            r"(lib!\([ \t]*\n?[ \t]*year{},?[\s\S]*?)[ \t]*\n?[ \t]*\)",
+            year
+        ),
         &day_replace,
         None,
         Some(&format!("lib!(year{year});\n")),
-        Some(&format!(r"(lib!\(year{},.*?{}.*?)\)", year, day_str)),
+        Some(&format!(
+            r"(lib!\([ \t]*\n?[ \t]*year{},[^)]*?{}[^)]*?)[ \t]*\n?[ \t]*\)",
+            year, day_str
+        )),
     );
 
     update_macro(
@@ -141,10 +159,7 @@ pub fn part2(input: &Input) -> u32 {
         &format!(", year{year})"),
         None,
         None,
-        Some(&format!(
-            r"(all_puzzles!\(year{},.*?{}.*?)\)",
-            year, day_str
-        )),
+        Some(&format!(r"(all_puzzles!\([^)]*?year{}[^)]*?)\)", year)),
     );
 
     let status = Command::new("cargo").arg("fmt").status().unwrap();
