@@ -32,14 +32,14 @@ def part2(path):
 
 class TestDay1(unittest.TestCase):
     def test_part1(self):
-        self.assertEqual(part1("../data/sample/day01.txt"), 3)
+        self.assertEqual(part1("../data/sample/day1.txt"), 3)
 
     def test_part2(self):
-        self.assertEqual(part2("../data/sample/day01.txt"), 6)
+        self.assertEqual(part2("../data/sample/day1.txt"), 6)
 
 
 if __name__ == "__main__":
-    print("part 1:", part1("../data/day01.txt"))
-    print("part 2:", part2("../data/day01.txt"))
+    print("part 1:", part1("../data/day1.txt"))
+    print("part 2:", part2("../data/day1.txt"))
 
     unittest.main()
