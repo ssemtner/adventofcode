@@ -16,4 +16,9 @@ mod year2025 {
         (sample_day3, part1: 357, part2: 3121910778619),
         (day3, part1: 16946, part2: 168627047606506)
     );
+
+    test_day!(year2025, day04,
+        (sample_day4, part1: 13, part2: 43),
+        (day4, part1: 1363, part2: 8184)
+    );
 }
