@@ -1,6 +1,8 @@
 #[macro_export]
 macro_rules! run_test {
     ($year:ident, $file:ident, $expected:expr, $part:ident) => {
+        let is_sample = stringify!($file).starts_with("sample");
+        adventofcode::util::sample::set_sample(is_sample);
         let year = &stringify!($year)[4..];
         let path = format!(
             "../{}/data/{}.txt",
@@ -10,6 +12,7 @@ macro_rules! run_test {
         let input = std::fs::read_to_string(path).unwrap();
         let input = parse(&input);
         assert_eq!($part(&input), $expected);
+        adventofcode::util::sample::set_sample(false);
     };
 }
 
