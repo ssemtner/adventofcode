@@ -50,7 +50,7 @@ pub fn part2((rules, updates): &Input) -> u32 {
 }
 
 fn issue(rules: &FxHashMap<u32, Vec<u32>>, update: &Vec<u32>) -> Option<(u32, u32)> {
-    let s: FxHashSet<&u32> = FxHashSet::from_iter(update.into_iter());
+    let s: FxHashSet<&u32> = FxHashSet::from_iter(update);
     let mut seen = FxHashSet::default();
 
     for a in update {

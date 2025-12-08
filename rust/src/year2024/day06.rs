@@ -24,7 +24,7 @@ pub fn parse(input: &str) -> Input {
 }
 
 pub fn part1((grid, start): &Input) -> usize {
-    simulate(&grid, &start)
+    simulate(grid, start)
         .0
         .iter()
         .flatten()
@@ -69,7 +69,7 @@ fn simulate(grid: &Vec<Vec<bool>>, start: &(usize, usize)) -> (Vec<Vec<bool>>, b
 }
 
 pub fn part2((grid, start): &Input) -> usize {
-    let (possible, _) = simulate(&grid, &start);
+    let (possible, _) = simulate(grid, start);
 
     grid.iter()
         .enumerate()
@@ -81,7 +81,7 @@ pub fn part2((grid, start): &Input) -> usize {
                     if possible[*i][j] && !grid[*i][j] {
                         let mut copy = grid.clone();
                         copy[*i][j] = true;
-                        Some(simulate(&copy, &start).1 as usize)
+                        Some(simulate(&copy, start).1 as usize)
                     } else {
                         None
                     }

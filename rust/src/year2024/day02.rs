@@ -16,12 +16,12 @@ fn safe(levels: &Vec<u32>) -> bool {
     let inc = levels[1] > last;
     for &level in levels.iter().skip(1) {
         let diff = level.abs_diff(last);
-        if diff < 1 || diff >= 4 || (inc && level <= last) || (!inc && level >= last) {
+        if !(1..4).contains(&diff) || (inc && level <= last) || (!inc && level >= last) {
             return false;
         }
         last = level;
     }
-    return true;
+    true
 }
 
 pub fn part1(input: &Input) -> usize {

@@ -22,10 +22,10 @@ pub fn part1(input: &Input) -> u32 {
 
     let n = input.len() as i32;
     let m = input[0].len() as i32;
-    let chars = vec!['X', 'M', 'A', 'S'];
+    let chars = ['X', 'M', 'A', 'S'];
 
-    while !stack.is_empty() {
-        let (i, j, c, di, dj) = stack.pop().unwrap();
+    while let Some((i, j, c, di, dj)) = stack.pop() {
+        
         if i < 0 || i >= n || j < 0 || j >= m || input[i as usize][j as usize] != chars[c] {
             continue;
         }
@@ -50,17 +50,14 @@ pub fn part2(input: &Input) -> u32 {
 
     for i in 0..n {
         for j in 0..m {
-            if input[i as usize][j as usize] == 'A' {
-                if (eq(i - 1, j - 1, 'M') && eq(i + 1, j + 1, 'S'))
-                    || (eq(i - 1, j - 1, 'S') && eq(i + 1, j + 1, 'M'))
-                {
-                    if (eq(i - 1, j + 1, 'M') && eq(i + 1, j - 1, 'S'))
+            if input[i as usize][j as usize] == 'A'
+                && ((eq(i - 1, j - 1, 'M') && eq(i + 1, j + 1, 'S'))
+                    || (eq(i - 1, j - 1, 'S') && eq(i + 1, j + 1, 'M')))
+                    && (eq(i - 1, j + 1, 'M') && eq(i + 1, j - 1, 'S'))
                         | (eq(i - 1, j + 1, 'S') && eq(i + 1, j - 1, 'M'))
                     {
                         count += 1;
                     }
-                }
-            }
         }
     }
 

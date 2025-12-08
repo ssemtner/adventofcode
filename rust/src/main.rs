@@ -155,7 +155,7 @@ pub fn part2(input: &Input) -> u32 {
 
     update_macro(
         &main,
-        &format!(r"(all_puzzles!\(year\d{{4}}(?:,\s*year\d{{4}})*)\)"),
+        &r"(all_puzzles!\(year\d{4}(?:,\s*year\d{4})*)\)".to_string(),
         &format!(", year{year})"),
         None,
         None,
@@ -195,7 +195,7 @@ fn update_macro(
         if matched.contains(new_arg)
             || (alt_check.is_some() && matched.contains(alt_check.unwrap()))
         {
-            return matched.to_string();
+            matched.to_string()
         } else {
             let group = &caps[1];
 

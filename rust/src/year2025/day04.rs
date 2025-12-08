@@ -66,7 +66,7 @@ pub fn part2(grid: &Input) -> u32 {
     let n = grid.len();
     let m = grid[0].len();
 
-    let mut adj = vec![vec![None; m as usize]; n as usize];
+    let mut adj = vec![vec![None; m]; n];
 
     let mut q = VecDeque::new();
 

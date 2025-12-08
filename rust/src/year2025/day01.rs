@@ -4,7 +4,7 @@ pub fn parse(input: &str) -> Input {
     input
         .lines()
         .map(|line| {
-            let val: i32 = (&line[1..]).parse().unwrap();
+            let val: i32 = line[1..].parse().unwrap();
             val * (match line.chars().next() {
                 Some('L') => -1,
                 Some('R') => 1,

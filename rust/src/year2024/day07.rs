@@ -18,7 +18,7 @@ pub fn parse(input: &str) -> Input {
 
 pub fn part1(input: &Input) -> u64 {
     input
-        .into_iter()
+        .iter()
         .filter(|(target, nums)| solvable(target, nums, false, 0, 0))
         .map(|(target, _)| target)
         .sum()
@@ -26,7 +26,7 @@ pub fn part1(input: &Input) -> u64 {
 
 pub fn part2(input: &Input) -> u64 {
     input
-        .into_iter()
+        .iter()
         .filter(|(target, nums)| solvable(target, nums, true, 0, 0))
         .map(|(target, _)| target)
         .sum()

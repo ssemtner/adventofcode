@@ -58,7 +58,7 @@ where
 {
     let mut antinodes = vec![vec![false; *m]; *n];
 
-    for (_, positions) in antennas {
+    for positions in antennas.values() {
         for pos1 in positions {
             for pos2 in positions {
                 if pos1 != pos2 {

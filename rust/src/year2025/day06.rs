@@ -35,7 +35,7 @@ pub fn part1(input: &Input) -> u64 {
         .map(|(i, op)| {
             let col = nums
                 .iter()
-                .filter_map(|row| row.get(i).map(|x| *x))
+                .filter_map(|row| row.get(i).copied())
                 .collect();
 
             let op = match op {
@@ -62,7 +62,7 @@ pub fn part2(input: &Input) -> u64 {
         .last()
         .unwrap()
         .as_bytes()
-        .into_iter()
+        .iter()
         .enumerate()
         .rev()
     {

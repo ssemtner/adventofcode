@@ -13,13 +13,13 @@ fn solve(input: &Input, digits: usize) -> u64 {
         .map(|vals| {
             (0..digits)
                 .fold((0, 0), |(joltage, start), i| {
-                    let next = (&vals[start..=(vals.len() - (digits - i))])
+                    let next = vals[start..=(vals.len() - (digits - i))]
                         .iter()
                         .max()
                         .unwrap();
                     (
                         joltage * 10 + *next as u64,
-                        &vals[start..].iter().position(|val| val == next).unwrap() + start + 1,
+                        vals[start..].iter().position(|val| val == next).unwrap() + start + 1,
                     )
                 })
                 .0
