@@ -79,7 +79,7 @@ pub fn part1((boxes, pairs): &Input) -> usize {
     circuits
         .iter()
         .map(|set| set.size)
-        .sorted()
+        .sorted_unstable()
         .rev()
         .take(3)
         .product()
