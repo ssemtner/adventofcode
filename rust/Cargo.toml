@@ -10,4 +10,5 @@ incremental = true
 clap = { version = "4.5.23", features = ["cargo"] }
 fxhash = "0.2.1"
 itertools = "0.13.0"
+microlp = "0.2.11"
 regex = "1.11.1"
