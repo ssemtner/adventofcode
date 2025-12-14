@@ -94,14 +94,14 @@ pub fn part2(input: &Input) -> u32 {
     update_macro(
         &bench,
         &format!(
-            r"(bench!\([ \t]*\n?[ \t]*year{},?[\s\S]*?)[ \t]*\n?[ \t]*\)",
+            r"(bench!\([ \t]*\n?[ \t]*c, year{},?[\s\S]*?)[ \t]*\n?[ \t]*\)",
             year
         ),
         &day_replace,
         None,
-        Some(&format!("bench!(year{year});\n")),
+        None, // need to manually add the year entry
         Some(&format!(
-            r"(bench!\([ \t]*\n?[ \t]*year{},[^)]*?{}[^)]*?)[ \t]*\n?[ \t]*\)",
+            r"(bench!\([ \t]*\n?[ \t]*c, year{},[^)]*?{}[^)]*?)[ \t]*\n?[ \t]*\)",
             year, day_str
         )),
     );

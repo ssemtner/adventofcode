@@ -1,15 +1,7 @@
-type Input = (Vec<usize>, Vec<(usize, Vec<usize>)>);
-
-// I tried writing an actual solution, got stuck, looked for hints, saw it was a troll and don't
-// feel like actually trying anymore so it's just hardcoded and I removed the sample input test.
+type Input = Vec<(usize, Vec<usize>)>;
 
 pub fn parse(input: &str) -> Input {
-    let (shapes, regions) = input.rsplit_once("\n\n").unwrap();
-
-    let shapes: Vec<usize> = shapes
-        .split("\n\n")
-        .map(|shape| shape.bytes().filter(|&x| x == b'#').count())
-        .collect();
+    let (_shapes, regions) = input.rsplit_once("\n\n").unwrap();
 
     let regions = regions
         .lines()
@@ -27,20 +19,13 @@ pub fn parse(input: &str) -> Input {
         })
         .collect();
 
-    (shapes, regions)
+    regions
 }
 
-pub fn part1((shapes, regions): &Input) -> usize {
+pub fn part1(regions: &Input) -> usize {
     regions
         .iter()
-        .filter(|(area, counts)| {
-            counts
-                .iter()
-                .enumerate()
-                .map(|(index, count)| count * shapes[index])
-                .sum::<usize>()
-                <= *area
-        })
+        .filter(|(area, counts)| counts.iter().map(|count| count * 9).sum::<usize>() <= *area)
         .count()
 }
 

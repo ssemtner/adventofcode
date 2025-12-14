@@ -1,17 +1,18 @@
-#![allow(unstable_features)]
-#![feature(test)]
-extern crate test;
+use criterion::{criterion_group, criterion_main, Criterion};
+use std::fs::read_to_string;
+use std::hint::black_box;
+use std::path::Path;
+use std::sync::LazyLock;
 
 macro_rules! bench {
-    ($year:tt, $($day:tt),*) => {
+    ($c:expr, $year:tt, $($day:tt),*) => {
         mod $year {
+            use super::*;
+
             $(
-                mod $day {
+                pub mod $day {
+                    use super::*;
                     use adventofcode::$year::$day::*;
-                    use std::fs::read_to_string;
-                    use std::path::Path;
-                    use std::sync::LazyLock;
-                    use test::Bencher;
 
                     static INPUT: LazyLock<String> = LazyLock::new(|| {
                         let year = &stringify!($year)[4..];
@@ -31,29 +32,57 @@ macro_rules! bench {
                         read_to_string(path).unwrap()
                     });
 
-                    #[bench]
-                    fn parse_bench(bencher: &mut Bencher) {
-                        bencher.iter(|| parse(&INPUT));
+                    pub fn bench(c: &mut Criterion) {
+                        let mut group = c.benchmark_group(format!("{}/{}", stringify!($year), stringify!($day)));
+
+                        group.bench_function("parse", |b| b.iter(|| black_box(parse(black_box(&INPUT)))));
+
+                        let input = parse(&INPUT);
+
+                        group.bench_function("part1", |b| b.iter(|| black_box(part1(black_box(&input)))));
+                        group.bench_function("part2", |b| b.iter(|| black_box(part2(black_box(&input)))));
+
+                        group.bench_function("total", |b| {
+                            b.iter(|| {
+                                let input = parse(black_box(&INPUT));
+                                black_box((part1(&input), part2(&input)));
+                            })
+                        });
+
+                        group.finish();
                     }
 
-                    #[bench]
-                    fn part1_bench(bencher: &mut Bencher) {
-                        let input = parse(&INPUT);
-                        bencher.iter(|| part1(&input));
-                    }
-
-                    #[bench]
-                    fn part2_bench(bencher: &mut Bencher) {
-                        let input = parse(&INPUT);
-                        bencher.iter(|| part2(&input));
+                    pub fn run_all() {
+                        let input = parse(black_box(&INPUT));
+                        black_box((part1(&input), part2(&input)));
                     }
                 }
             )*
+
+            pub fn bench_year(c: &mut Criterion) {
+                $(
+                    $day::bench(c);
+                )*
+
+                c.bench_function(stringify!($year), |b| b.iter(|| {
+                    $(
+                        $day::run_all();
+                    )*
+                }));
+            }
         }
+
+        $year::bench_year($c);
     }
 }
 
-bench!(year2024, day01, day02, day03, day04, day05, day06, day07, day08);
-bench!(
-    year2025, day01, day02, day03, day04, day05, day06, day07, day08, day09, day10, day11, day12
-);
+fn aoc_benches(c: &mut Criterion) {
+    bench!(c, year2024, day01, day02, day03, day04, day05, day06, day07, day08);
+    bench!(
+        c, year2025, day01, day02, day03, day04, day05, day06, day07, day08, day09, day10, day11,
+        day12
+    );
+}
+
+criterion_group!(benches, aoc_benches);
+criterion_main!(benches);

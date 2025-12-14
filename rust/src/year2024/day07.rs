@@ -19,7 +19,7 @@ pub fn parse(input: &str) -> Input {
 pub fn part1(input: &Input) -> u64 {
     input
         .iter()
-        .filter(|(target, nums)| solvable(target, nums, false, 0, 0))
+        .filter(|(target, nums)| solvable(*target, nums, false))
         .map(|(target, _)| target)
         .sum()
 }
@@ -27,21 +27,34 @@ pub fn part1(input: &Input) -> u64 {
 pub fn part2(input: &Input) -> u64 {
     input
         .iter()
-        .filter(|(target, nums)| solvable(target, nums, true, 0, 0))
+        .filter(|(target, nums)| solvable(*target, nums, true))
         .map(|(target, _)| target)
         .sum()
 }
 
-fn solvable(target: &u64, nums: &[u64], part2: bool, total: u64, i: usize) -> bool {
-    if i == nums.len() {
-        return total == *target;
+fn solvable(target: u64, nums: &[u64], allow_concat: bool) -> bool {
+    if nums.len() == 1 {
+        return nums[0] == target;
     }
 
-    let product = total * nums[i];
-    let sum = total + nums[i];
-    let concat = format!("{}{}", total, nums[i]).parse::<u64>().unwrap();
+    let n = nums[nums.len() - 1];
+    let remaining = &nums[0..nums.len() - 1];
 
-    solvable(target, nums, part2, sum, i + 1)
-        || (product <= *target && solvable(target, nums, part2, product, i + 1))
-        || (part2 && concat <= *target && solvable(target, nums, part2, concat, i + 1))
+    let q = target / n;
+    let r = target % n;
+
+    if r == 0 && solvable(q, remaining, allow_concat) {
+        true
+    } else if allow_concat
+        && (target.wrapping_sub(n)) % 10u64.pow(n.ilog10() + 1) == 0
+        && solvable(
+            target / (10u64.pow(n.ilog10() + 1)),
+            remaining,
+            allow_concat,
+        )
+    {
+        true
+    } else {
+        solvable(target.wrapping_sub(n), remaining, allow_concat)
+    }
 }
